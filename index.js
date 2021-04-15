@@ -93,7 +93,6 @@ client.connect(err => {
 
   app.post('/makeAdmin',(req,res)=>{
     const emailId=req.body;
-    console.log('SSS: ',emailId);
     const adminsCollection = client.db("kidsHeaven").collection("admins");
     adminsCollection.insertOne(emailId)
     .then(result=>{
@@ -102,33 +101,13 @@ client.connect(err => {
   });
 
 
-  // //Get Single Basic
 
-  // app.post('/getSingleBasicService',(req,res)=>{
-  //   const id=req.body.id;
-  //   const basicServicesCollection=client.db("kidsHeaven").collection("basicServices");
-  //   basicServicesCollection.find({_id:ObjectId(id)})
-  //   .toArray((err,documents)=>{
-  //     res.send(documents);
-  //   })
-  // });
-
-  // //Get single Premium
-  // app.post('/getSinglePremiumService',(req,res)=>{
-  //   const id=req.body.id;
-  //   const premiumServicesCollection=client.db("kidsHeaven").collection("services");
-  //   premiumServicesCollection.find({_id:ObjectId(id)})
-  //   .toArray((err,documents)=>{
-  //     res.send(documents);
-  //   })
-  // });
 
 
   //Get All services
 
   app.post('/getFromAllServices',(req,res)=>{
     const id=req.body.id;
-    console.log('New Id is: ',id);
     const basicServicesCollection=client.db("kidsHeaven").collection("basicServices");
     const premiumServicesCollection=client.db("kidsHeaven").collection("services");
     basicServicesCollection.find({_id:ObjectId(id)})
@@ -144,7 +123,32 @@ client.connect(err => {
         res.send(document);
       }
     })
-  })
+  });
+
+  //Post Payment Information to database
+
+  app.post('/postPaymentInfo',(req,res)=>{
+    const paymentInfo=req.body;
+    const paymentsCollection=client.db("kidsHeaven").collection("payments");
+    paymentsCollection.insertOne(paymentInfo)
+    .then(result=>{
+      res.send(result.insertedCount>0)
+    })
+  });
+
+  //Fetching all orders
+
+  app.get('/getAllOrder',(req,res)=>{
+    const ordersCollection=client.db("kidsHeaven").collection("payments");
+    ordersCollection.find({})
+    .toArray((err,documents)=>{
+      res.send(documents);
+    })
+  });
+
+
+
+//To be done
 
 });
 

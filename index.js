@@ -14,6 +14,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
 
+  //admin check
   app.post('/isAdmin',(req,res)=>{
     const adminsCollection = client.db("kidsHeaven").collection("admins");
     const email=req.body.email;
@@ -29,6 +30,7 @@ client.connect(err => {
     
   });
 
+  //Review Posting
   app.post('/postReview',(req,res)=>{
     const reviewsCollection = client.db("kidsHeaven").collection("reviews");
     const review=req.body;
@@ -38,6 +40,7 @@ client.connect(err => {
     })
   });
 
+  //Premium service Post
   app.post('/addService',(req,res)=>{
     const servicesCollection=client.db("kidsHeaven").collection("services");
     const service=req.body;
@@ -45,9 +48,49 @@ client.connect(err => {
     .then(result=>{
       res.send(result.insertedCount>0)
     })
+  });
+
+  //Basic Service Post
+  app.post('/addBasicService',(req,res)=>{
+    const basicServicesCollection=client.db("kidsHeaven").collection("basicServices");
+    const service=req.body;
+    basicServicesCollection.insertOne(service)
+    .then(result=>{
+      res.send(result.insertedCount>0)
+    })
+  });
+
+  //Basic Service Get
+  app.get('/getBasicService',(req,res)=>{
+    const basicServicesCollection=client.db("kidsHeaven").collection("basicServices");
+    basicServicesCollection.find({})
+    .toArray((err,documents)=>{
+      res.send(documents);
+    })
+  });
+
+  //Premium Service Get
+  app.get('/getPremiumService',(req,res)=>{
+    const premiumServicesCollection=client.db("kidsHeaven").collection("services");
+    premiumServicesCollection.find({})
+    .toArray((err,documents)=>{
+      res.send(documents);
+    })
+  });
+
+  //Review Getting
+
+  app.get('/getReview',(req,res)=>{
+    const showReviewsCollection = client.db("kidsHeaven").collection("reviews");
+    showReviewsCollection.find({})
+    .toArray((err,documents)=>{
+      res.send(documents);
+    })
   })
 
 });
+
+
 
 
 app.listen(port, () => {

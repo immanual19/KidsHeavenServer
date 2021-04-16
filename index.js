@@ -13,6 +13,11 @@ app.use(fileUpload());
 const port = process.env.PORT || 8080;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.q17pz.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+app.get('/',(req,res)=>{
+  res.send('Welcome to the database of KidsHeaven');
+})
+
 client.connect(err => {
 
   //admin check
@@ -203,8 +208,26 @@ premiumServicesCollection.deleteOne({
 
 });
 
+//Add a branch
+
+app.post('/addABranch',(req,res)=>{
+  const branchInfo=req.body;
+  const branchesCollection=client.db("kidsHeaven").collection("branches");
+  branchesCollection.insertOne(branchInfo)
+  .then(result=>{
+    res.send(result.insertedCount>0)
+  });
 
 
+});
+  //Show all Branch
+app.get('/getAllBranches',(req,res)=>{
+  const branchesCollection=client.db("kidsHeaven").collection("branches");
+  branchesCollection.find({})
+  .toArray((err,documents)=>{
+    res.send(documents);
+  })
+});
 });
 
 

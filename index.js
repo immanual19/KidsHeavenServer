@@ -148,7 +148,12 @@ client.connect(err => {
 
 
 
-//To be done
+//Specific user order
+
+app.post('/myOrder',(req,res)=>{
+ const ordersCollection=client.db("kidsHeaven").collection("payments");
+ ordersCollection.find({})
+})
 
 });
 

@@ -104,7 +104,7 @@ client.connect(err => {
 
 
 
-  //Get All services
+  //Get one from All services
 
   app.post('/getFromAllServices',(req,res)=>{
     const id=req.body.id;
@@ -151,13 +151,61 @@ client.connect(err => {
 //Specific user order
 
 app.post('/myOrder',(req,res)=>{
- const ordersCollection=client.db("kidsHeaven").collection("payments");
- ordersCollection.find({})
+        const email=req.body.email;
+        const ordersCollection=client.db("kidsHeaven").collection("payments");
+        ordersCollection.find({userEmail:email})
+        .toArray((err,documents)=>{
+          res.send(documents);
+        })
+
+});
+
+//Order status update
+
+app.patch('/updateOrderStatus',(req,res)=>{
+  const modified=req.body;
+  const {id,status}=modified;
+  const ordersCollection=client.db("kidsHeaven").collection("payments");
+  ordersCollection.updateOne({_id:ObjectId(id)},
+  {
+    $set:{serviceStatus:status}
+  })
+  .then(result=>{
+    res.send(result.modifiedCount>0)
+  })
+});
+
+
+//Delete 1 basic Service
+
+app.post('/deleteBasicService',(req,res)=>{
+  const id=req.body.id;
+  
+  const basicServicesCollection=client.db("kidsHeaven").collection("basicServices");
+  basicServicesCollection.deleteOne({
+    _id:ObjectId(id)
+  })
+  .then(result=>{
+    res.send(result.deletedCount>0)
+  })
+});
+
+//Delete 1 premium Service
+app.post('/deletePremiumService',(req,res)=>{
+const id=req.body.id;
+const premiumServicesCollection=client.db("kidsHeaven").collection("services");
+premiumServicesCollection.deleteOne({
+  _id:ObjectId(id)
+})
+.then(result=>{
+  res.send(result.deletedCount>0)
 })
 
 });
 
 
+
+});
 
 
 app.listen(port, () => {

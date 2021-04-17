@@ -1,6 +1,6 @@
 # Introduction
 
-1. This is the server of a daycare center called KidsHeaven.
+1. This is the server of a daycare center called Kids Heaven.
 
 # User Functionalities
 

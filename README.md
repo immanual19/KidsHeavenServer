@@ -21,7 +21,7 @@
 
 # Development Summary
 
-1. In backend, I have used Node, MongoDB and Express.
+1. I have used Node, MongoDB and Express here.
 
 # Live Site Link
 
